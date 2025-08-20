@@ -11,3 +11,9 @@ Pending: conda env creation (user local), add deepagents submodule, import promp
 - Added deepagents as submodule (shallow clone)
 - SHA: e7762ac
 - Next: import prompt assets, smoke test agent loop.
+
+## 2025-08-20 Env Created
+- Created conda env deepR-env (python 3.11) per environment.yml
+- Installed project in editable mode
+- Initial tests executed successfully
+- Next: import prompt assets (open_deep_research), add smoke agent test.
