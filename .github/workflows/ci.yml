@@ -21,8 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
-          pip install pytest httpx respx
+          # install the project so tests can import deepr
+          python -m pip install -e .
+          # install test/runtime deps required by tests
+          python -m pip install pytest httpx respx typer pydantic
       - name: Run tests
         run: |
           PYTHONPATH=. pytest -q
