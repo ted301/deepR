@@ -23,3 +23,9 @@ Pending: conda env creation (user local), add deepagents submodule, import promp
 - Added deepagents smoke placeholder module & test
 - Tests passing
 - Phase 0 tasks complete -> Milestone M1 achieved (pending tag)
+
+## 2025-08-20 Phase1 Start
+- Added tool base + registry & test
+- Added initial ModelProvider abstraction (dummy)
+- Tests passing
+- Next: implement real Ollama & LM Studio providers, embedding provider, vector store wrapper.
