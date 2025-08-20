@@ -20,3 +20,10 @@ async def test_run_tool():
     tool = tb.registry.get("echo")
     res = await tool.run(EchoInput(text="hello"))
     assert res.data == "hello"
+
+@pytest.fixture(autouse=True)
+def register_echo():
+    tb.registry._tools.clear()
+    tb.registry.register(EchoTool())
+    yield
+    tb.registry._tools.clear()
