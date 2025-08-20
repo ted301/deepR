@@ -17,3 +17,9 @@ Pending: conda env creation (user local), add deepagents submodule, import promp
 - Installed project in editable mode
 - Initial tests executed successfully
 - Next: import prompt assets (open_deep_research), add smoke agent test.
+
+## 2025-08-20 Prompts & Smoke
+- Imported adapted open_deep_research prompts (attribution noted)
+- Added deepagents smoke placeholder module & test
+- Tests passing
+- Phase 0 tasks complete -> Milestone M1 achieved (pending tag)
