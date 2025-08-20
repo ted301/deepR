@@ -24,7 +24,7 @@ jobs:
           # install the project so tests can import deepr
           python -m pip install -e .
           # install test/runtime deps required by tests
-          python -m pip install pytest httpx respx typer pydantic
+          python -m pip install pytest httpx respx typer pydantic pytest-asyncio anyio
       - name: Run tests
         run: |
           PYTHONPATH=. pytest -q
