@@ -29,3 +29,8 @@ Pending: conda env creation (user local), add deepagents submodule, import promp
 - Added initial ModelProvider abstraction (dummy)
 - Tests passing
 - Next: implement real Ollama & LM Studio providers, embedding provider, vector store wrapper.
+
+## 2025-08-20 State Added
+- Implemented SharedGraphState dataclass with task queue helpers
+- Added test_state.py passing
+- Next: Implement Ollama & LM Studio providers then vector store wrapper.
