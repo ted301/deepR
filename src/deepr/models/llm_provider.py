@@ -337,6 +337,7 @@ class LMStudioProvider(ModelProvider):
             return f"{self.base_url}{path}"
 
         last_exc: Optional[Exception] = None
+        yielded_any = False
         for path in candidate_paths:
             url = build_url(path)
             try:
@@ -359,10 +360,14 @@ class LMStudioProvider(ModelProvider):
                                 if line.startswith("data:"):
                                     payload_line = line[len("data:"):].strip()
                                     if payload_line == "[DONE]":
-                                        return
+                                        if yielded_any:
+                                            return
+                                        # if nothing yielded yet, break to try fallback endpoints
+                                        raise RuntimeError("stream signaled done without chunks")
                                     try:
                                         obj = json.loads(payload_line)
                                     except Exception:
+                                        yielded_any = True
                                         yield payload_line
                                         continue
                                     # try to extract incremental delta content
@@ -375,6 +380,7 @@ class LMStudioProvider(ModelProvider):
                                                 if isinstance(delta, dict):
                                                     dcont = delta.get("content") or delta.get("text")
                                                     if isinstance(dcont, str):
+                                                        yielded_any = True
                                                         yield dcont
                                                         continue
                                                 # full message in streaming chunk
@@ -382,15 +388,18 @@ class LMStudioProvider(ModelProvider):
                                                 if isinstance(msg, dict):
                                                     cont = msg.get("content")
                                                     if isinstance(cont, str):
+                                                        yielded_any = True
                                                         yield cont
                                                         continue
                                                 txt = c.get("text")
                                                 if isinstance(txt, str):
+                                                    yielded_any = True
                                                     yield txt
                                                     continue
                                     # fallback: try full-object extraction
                                     t = self._extract_text(obj)
                                     if t:
+                                        yielded_any = True
                                         yield t
                                 else:
                                     # not SSE, try parsing as JSON
@@ -398,22 +407,27 @@ class LMStudioProvider(ModelProvider):
                                         obj = json.loads(line)
                                         t = self._extract_text(obj)
                                         if t:
+                                            yielded_any = True
                                             yield t
                                             continue
                                     except Exception:
+                                        yielded_any = True
                                         yield line
-                        # if stream ended, return
-                        return
+                        # if stream ended normally, return if we yielded something
+                        if yielded_any:
+                            return
+                        # otherwise continue to next candidate path
             except Exception as exc:
                 last_exc = exc
                 continue
 
-        # streaming failed for all endpoints
-        if last_exc:
-            try:
-                yield self.generate(prompt)
-            except Exception as exc:
-                raise RuntimeError("LMStudio streaming and fallback generate both failed") from exc
+        # streaming failed for all endpoints or produced no chunks -> fallback
+        try:
+            gen_out = self.generate(prompt)
+        except Exception as exc:
+            raise RuntimeError("LMStudio streaming and fallback generate both failed") from exc
+        # yield generate output as a single chunk
+        yield gen_out
 
     def list_models(self) -> list[str]:
         """List models using LMStudio's OpenAI-compatible `/v1/models` endpoint."""

@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/deepr/__init__.py
+src/deepr.egg-info/PKG-INFO
+src/deepr.egg-info/SOURCES.txt
+src/deepr.egg-info/dependency_links.txt
+src/deepr.egg-info/entry_points.txt
+src/deepr.egg-info/requires.txt
+src/deepr.egg-info/top_level.txt
+src/deepr/cli/main.py
+src/deepr/config/settings.py
+src/deepr/logging/logger.py
+tests/test_cli_basic.py
+tests/test_config_load.py
+tests/test_env_placeholder.py

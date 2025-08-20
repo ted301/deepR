@@ -24,8 +24,8 @@ Status: Pending approval
 | ID | PRI | Task | Type | Depends | Acceptance Criteria | Tests |
 |----|-----|------|------|---------|---------------------|-------|
 | T1.1 | 1 | DeepAgents tool wrapper + extended registry (PDF, PKB custom tools) | F | T0.7 | Registry lists base + custom tools | test_tool_registry.py |
-| T1.2 | 1 | ModelProvider abstraction + Ollama & LMStudio providers (non-stream) | F | T0.5 | Mock integration returns text | test_model_provider.py |
-| T1.3 | 2 | Streaming support for ModelProvider | F | T1.2 | Iterator yields chunks | test_model_stream.py |
+| T1.2 | 1 | ModelProvider abstraction + Ollama & LMStudio providers (non-stream) ✅ Completed | F | T0.5 | Mock integration returns text | test_model_provider.py |
+| T1.3 | 2 | Streaming support for ModelProvider ✅ Completed | F | T1.2 | Iterator yields chunks | test_model_stream.py |
 | T1.4 | 1 | EmbeddingProvider (sentence-transformers local) | F | T0.5 | Embeds deterministic length | test_embedding_provider.py |
 | T1.5 | 2 | VectorStore wrapper (Chroma collections: run + pkb) | F | T1.4 | Add & similarity search pass | test_vector_store.py |
 | T1.6 | 2 | SharedGraphState dataclass | F | T0.5 | Instantiation + update ops | test_state.py |
@@ -124,3 +124,8 @@ Status: Pending approval
 
 ---
 Provide approval or adjustments. Upon approval, implementation will begin from Phase 0 (with `checkpoints.md` updates).
+
+## Notes
+- Provider selection wired into `deepr.agents.provider_selector.get_provider` (returns provider based on `DeepRSettings`).
+- Added respx-based unit tests for providers under `tests/` that skip if `respx` not installed.
+- Next: add CI workflow, expand tests for edge cases, and integrate providers into agent flow.
